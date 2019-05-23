@@ -7,7 +7,7 @@ let validator = require("validator");
 
 /*
   Defining User schema:
-    username: unique username of the user
+    username: unique username of the user, can only be alphanumeric
     password: Encrypted password in string,
     email: validated unique email
     avgScore: average score from all previous quiz attempts
@@ -25,6 +25,12 @@ let userSchema = mongoose.Schema({
     required: true,
     minlength: 6,
     trim: true,
+    validate: {
+      validator: (value) => {
+        return validator.isAlphanumeric(value);
+      },
+      message: "{VALUE} is not a valid username!",
+    },
   },
   password: {
     type: String,
@@ -47,10 +53,10 @@ let userSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-  //
   participations: [{
     quizAttempt: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "Quiz",
     },
     score: {
       type: Number,
@@ -59,13 +65,59 @@ let userSchema = mongoose.Schema({
       type: Date,
     },
   }],
-  // 
-  contributions: [{
+  quizzesCreated: [{
     type: mongoose.Schema.Types.ObjectId,
+    ref: "Quiz",
   }],
 }, {timestamps: true});
 
 // adding middlewares //
+
+// finding user from the database with matching email/username
+userSchema.statics.findByCredentialsAndValidate = function(identity, password){
+  let User = this;
+  // returning a promise
+  return new Promise((resolve, reject) => {
+    // if email is valid
+    if(validator.isEmail(identity)){
+      User.findOne({email: identity}, (err, user) => {
+        if(err) reject({err: err});
+        // if user with matching email not found
+        if(!user) reject({err: "Email match not found!"});
+        // if user found, validating password
+        if(user){
+          let validationResult = user.validatePassword(password, user.password);
+          if(validationResult) resolve(user);
+          else if(!validationResult) reject({err: "Invalid Password!"});
+        }
+      });
+    }
+    // if invalid email but valid username
+    else if(!validator.isEmail(identity) && validator.isAlphanumeric(identity)){
+      User.findOne({username: identity}, (err, user) => {
+        if(err) reject({err: err});
+        // if user with matching username not found
+        if(!user) reject({err: "Username match not found!"});
+        // if user found, validating password
+        if(user){
+          let validationResult = user.validatePassword(password, user.password);
+          if(validationResult) resolve(user);
+          else if(!validationResult) reject({err: "Invalid Password"});
+        }
+      });
+    }
+    else if(!validator.isEmail(identity) && !validator.isAlphanumeric(identity)){
+      reject({err: "Invalid Credentials"});
+    }
+  });
+}
+
+// validating password for login
+userSchema.methods.validatePassword = function(passwordInput, passwordHash){
+  if(passwordInput.length < 8) return false;
+  return bcryptjs.compareSync(passwordInput, passwordHash);
+}
+
 // pre-save hook: hashing password before saving the document
 userSchema.pre("save", function(next){
   let user = this;

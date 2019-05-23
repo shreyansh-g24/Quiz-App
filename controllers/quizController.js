@@ -21,7 +21,7 @@ module.exports = {
   createNew: function(req, res, next){
 
     // TEMP: Updating creator_id ///////////////////////////////////////////////////////////
-    req.body.metadata.creator_id = new mongoose.Types.ObjectId();
+    req.body.creator_id = new mongoose.Types.ObjectId();
 
     Quiz.create(req.body, (err, newQuiz) => {
       if(err) return next(err);
@@ -41,7 +41,7 @@ module.exports = {
       
       // TEMP: Add support for searching via description and tags and return the _id of the matches as well ////////////////////////////
 
-      quizArr.forEach((quiz) => titles.push(quiz.metadata.title));
+      quizArr.forEach((quiz) => titles.push(quiz.title));
 
       // matching the titles array with the query string and arranging in descending order of similarity
       let match = stringSimilarity.findBestMatch(queryString, titles);
