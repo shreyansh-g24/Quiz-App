@@ -20,11 +20,11 @@ module.exports = {
 
     Quiz.create(req.body, (err, newQuiz) => {
       if(err) return next(err);
-      
+
       // associating the creator with the quiz
       associateQuiz(newQuiz._id, newQuiz.creator_id, next);
 
-      res.status(201).json(newQuiz);
+      return res.status(201).send("Quiz created successfully!");
     });
   },
   

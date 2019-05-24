@@ -11,7 +11,7 @@ let Quiz = mongoose.model("Quiz");
 module.exports = {
   // returning all quizzes
   returnAll: function(req, res, next){
-    Quiz.find({}).populate("creator_id").exec((err, quizArr) => {
+    Quiz.find({}, (err, quizArr) => {
       if(err) return next(err);
       res.status(200).json(quizArr);
     });
@@ -21,7 +21,7 @@ module.exports = {
   searchQuizzes: function(req, res, next){
     // extracting the query string
     let queryString = req.body.query;
-    Quiz.find({}).populate("creator_id").exec(function(err, quizArr){
+    Quiz.find({}, function(err, quizArr){
       if(err) return next(err);
       
       // extracting quiz titles into an array
@@ -46,7 +46,7 @@ module.exports = {
 
   // returning the requested quiz
   returnQuiz: function(req, res, next){
-    Quiz.findById(req.params.id).populate("creator_id").exec((err, quiz) => {
+    Quiz.findById(req.params.id, (err, quiz) => {
       if(err) return next(err);
       res.status(200).json(quiz);
     });

@@ -91,7 +91,7 @@ userSchema.statics.findByCredentialsAndValidate = function (identity, password) 
 	return new Promise((resolve, reject) => {
 		// if email is valid
 		if (validator.isEmail(identity)) {
-			User.findOne({ email: identity }).populate("quizzesCreated").exec((err, user) => {
+			User.findOne({ email: identity }, (err, user) => {
 				if (err) reject({ err: err });
 				// if user with matching email not found
 				if (!user) reject({ err: "Email match not found!" });
@@ -105,7 +105,7 @@ userSchema.statics.findByCredentialsAndValidate = function (identity, password) 
 		}
 		// if invalid email but valid username
 		else if (!validator.isEmail(identity) && validator.isAlphanumeric(identity)) {
-			User.findOne({ username: identity }).populate("quizzesCreated").exec((err, user) => {
+			User.findOne({ username: identity }, (err, user) => {
 				if (err) reject({ err: err });
 				// if user with matching username not found
 				if (!user) reject({ err: "Username match not found!" });
@@ -144,6 +144,7 @@ userSchema.pre("save", function (next) {
 		bcryptjs.genSalt(10, function (err, salt) {
 			if (err) return next(err);
 			bcryptjs.hash(user.password, salt, function (err, hash) {
+				if(err) return next(err);
 				user.password = hash;
 				return next();
 			});

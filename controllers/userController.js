@@ -1,20 +1,21 @@
 // CONTROLLER: USER //
 
 // importing modules
-let mongoose = require("mongoose");
+// let mongoose = require("mongoose");
 let jwt = require("jsonwebtoken");
 let config = require("./../config/config");
 
 // Requiring User Model
-let User = mongoose.model("User");
+// let User = mongoose.model("User");
+let User = require('../models/User')
 
 // exporting controller functions
 module.exports = {
 	// associating the creator with the quiz created
 	associateQuiz: function(quizID, creatorID, next){
-		User.findByIdAndUpdate(creatorID, {$push: {quizzesCreated: quizID}}, (err, creator) => {
+		User.findByIdAndUpdate(creatorID, {$push: {quizzesCreated: quizID}}, {new: true}, (err, creator) => {
 			if(err) return next(err);
-			else console.log("userController.js: Creator updated!");
+			console.log("userController.js: Creator updated => ", creator.quizzesCreated);
 		});
 	},
 
