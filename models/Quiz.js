@@ -9,7 +9,7 @@ let mongoose = require("mongoose");
     description of the quiz
     tags to tag the quiz for searching purposes
     id of the creator
-    ids of the participants
+    usernames of the participants
     
     content:
       Text of the question
@@ -45,10 +45,13 @@ let quizSchema = mongoose.Schema({
     required: true,
   },
   participants: [{
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "User",
   }],
-  //
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
   content: [{
     questionText: {
       type: String,
@@ -67,6 +70,21 @@ let quizSchema = mongoose.Schema({
     }],
   }],
 }, {timestamps: true});
+
+// picking out fields to be returned with each quiz document
+quizSchema.methods.toJSON = function(){
+  let quiz = this;
+  if(quiz.isDeleted){
+    return {
+      title: quiz.title,
+      description: "This quiz was deleted by the creator",
+      creator_id: quiz.creator_id,
+      participants: quiz.participants,
+      isDeleted: quiz.isDeleted
+    };
+  }
+  else return quiz;
+}
 
 // requiring model
 let Quiz = mongoose.model("Quiz", quizSchema);

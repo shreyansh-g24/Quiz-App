@@ -2,73 +2,61 @@
 
 // importing modules
 let mongoose = require("mongoose");
-let stringSimilarity = require("string-similarity");
+// let stringSimilarity = require("string-similarity");
 
 // getting quiz model
 let Quiz = mongoose.model("Quiz");
 
+// requiring the user controller
+let {associateQuiz} = require("./userController");
+
 // exporting quiz controller functions
 module.exports = {
-  // returning all quizzes
-  returnAll: function(req, res, next){
-    Quiz.find({}, (err, quizArr) => {
-      if(err) return next(err);
-      res.json(quizArr);
-    });
-  },
-
   // creating a new quiz
   createNew: function(req, res, next){
 
-    // TEMP: Updating creator_id ///////////////////////////////////////////////////////////
-    req.body.creator_id = new mongoose.Types.ObjectId();
+    // associating the quiz with the creator
+    req.body.creator_id = req.decoded._id;
 
     Quiz.create(req.body, (err, newQuiz) => {
       if(err) return next(err);
-      res.json(newQuiz);
-    });
-  },
-
-  // searching db for matching quizzes
-  searchQuizzes: function(req, res, next){
-    // extracting the query string
-    let queryString = req.body.query;
-    Quiz.find({}, function(err, quizArr){
-      if(err) return next(err);
       
-      // extracting quiz titles into an array
-      let titles = [];
-      
-      // TEMP: Add support for searching via description and tags and return the _id of the matches as well ////////////////////////////
+      // associating the creator with the quiz
+      associateQuiz(newQuiz._id, newQuiz.creator_id, next);
 
-      quizArr.forEach((quiz) => titles.push(quiz.title));
-
-      // matching the titles array with the query string and arranging in descending order of similarity
-      let match = stringSimilarity.findBestMatch(queryString, titles);
-      let matchRatings = match.ratings;
-      let matches = matchRatings.sort(function(a, b){return b.rating - a.rating});
-
-      let order = [];
-      matches.forEach((match) => order.push(match.target));
-
-      // returning the matches
-      res.json(order);
+      res.status(201).json(newQuiz);
     });
   },
-
-  // returning the requested quiz
-  returnQuiz: function(req, res, next){
-    Quiz.findById(req.params.id, (err, quiz) => {
-      if(err) return next(err);
-      res.json(quiz);
-    });
-  },
-
+  
   // deleting the requested quiz and returning it
   deleteQuiz: function(req, res, next){
-    Quiz.findByIdAndDelete(req.params.id, (err, quiz) => {
+    Quiz.findById(req.params.id, (err, quiz) => {
       if(err) return next(err);
-      res.json(quiz);
+
+      // checking authorisation before deletion
+      if(req.decoded._id.toString() !== quiz.creator_id.toString()) return res.status(403).send("You're not authorized to delete this quiz!");
+
+      // if authorisation passed, updating the quiz to be marked as deleted
+      Quiz.findByIdAndUpdate(req.params.id, {isDeleted: true}, {new: true}, (err, updatedQuiz) => {
+        if(err) return next(err);
+        res.status(200).json(updatedQuiz)
+      });
+    });
+  },
+
+  // restoring the quiz
+  restoreQuiz: function(req, res, next){
+    Quiz.findById(req.params.id, (err, quiz) => {
+      if(err) return next(err);
+
+      // checking authorisation before deletion
+      if(req.decoded._id.toString() !== quiz.creator_id.toString()) return res.status(403).send("You're not authorized to restore this quiz!");
+
+      // if authorisation passed, updating the quiz to be marked as not deleted
+      Quiz.findByIdAndUpdate(req.params.id, {isDeleted: false}, {new: true}, (err, updatedQuiz) => {
+        if(err) return next(err);
+        res.status(200).json(updatedQuiz);
+      });
     });
   },
 };

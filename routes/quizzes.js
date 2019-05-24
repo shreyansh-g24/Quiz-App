@@ -4,23 +4,20 @@
 let express = require("express");
 let router = express.Router();
 
-// requiring controller
+// requiring controller functions
 let quizController = require("./../controllers/quizController");
+let {authenticateJWT} = require("./../controllers/userController");
 
 /* 
   Handled Routes:
-    => GET / : requesting all quizzes
     => POST /new: create a new quiz
-    => POST /search: search quizzes based on query string
-    => GET /search/:id :- returns the quiz with matching id
     => GET /delete/:id :- deleting a quiz and returning it, selection with id
+    => GET /restore/:id :- restoring a previously deleted quiz and returning it, selection with id
 */
 
-router.get("/", quizController.returnAll);
-router.post("/new", quizController.createNew);
-router.post("/search", quizController.searchQuizzes);
-router.get("/search/:id", quizController.returnQuiz);
-router.get("/delete/:id", quizController.deleteQuiz);
+router.post("/new", authenticateJWT, quizController.createNew);
+router.get("/delete/:id", authenticateJWT, quizController.deleteQuiz);
+router.get("/restore/:id", authenticateJWT, quizController.restoreQuiz);
 
 // exporting router
 module.exports = router;
