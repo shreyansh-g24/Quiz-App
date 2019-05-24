@@ -25,15 +25,19 @@ let userSchema = mongoose.Schema({
 		type: String,
 		unique: true,
 		required: true,
+		minlength: 6,
 		trim: true,
+		validate: {
+			validator: (value) => {
+				return validator.isAlphanumeric(value);
+			},
+			message: "{VALUE} is not a valid username!",
+		},
 	},
 	password: {
 		type: String,
 		required: true,
 		minlength: 8,
-	},
-	photoURL: {
-		type: String,
 	},
 	email: {
 		type: String,
@@ -75,8 +79,8 @@ let userSchema = mongoose.Schema({
 userSchema.methods.toJSON = function(){
 	let user = this;
 	// extracting fields to be returned
-	let {email, username, avgScore, quizzesCreated, participations, photoURL} = user;
-	let userObject = {email, username, photoURL, avgScore, quizzesCreated, participations};
+	let {email, username, avgScore, quizzesCreated, participations} = user;
+	let userObject = {email, username, avgScore, quizzesCreated, participations};
 	return userObject;
 }
 
