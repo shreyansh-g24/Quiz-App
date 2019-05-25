@@ -103,7 +103,7 @@ function init(){
     });
     heroSignUp.innerText = "Hi, " + Global_User.username;
     heroSignUp.classList.add("is-info");
-    heroSignUp.href = "http://localhost:3000/user/" + Global_User.userId;
+    heroSignUp.href = `http://localhost:3000/users/${Global_User.userId}/?t=${Global_User.token}`;
   }
   else if(!isLoggedIn()){
     // updating elements

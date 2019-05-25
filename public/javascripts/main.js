@@ -29,7 +29,7 @@ function formatHtml(quizObj){
   let quizRedirect = "";
 
   // updating redirection url depending upon if the user is logged in
-  if(isLoggedIn()) quizRedirect = `http://localhost:3000/api/v1/quiz/search/${quizObj._doc._id}`;
+  if(isLoggedIn()) quizRedirect = `http://localhost:3000/api/v1/quiz/search/${quizObj._doc._id}/?t=${Global_User.token}`;
   else if(!isLoggedIn()) quizRedirect = "http://localhost:3000/login";
 
   // formatting html card with quiz info

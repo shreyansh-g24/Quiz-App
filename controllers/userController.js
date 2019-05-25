@@ -11,6 +11,19 @@ let User = require('../models/User')
 
 // exporting controller functions
 module.exports = {
+	// extract token value and set it in headers for authenticateJWT middleware
+	extractJWT: function(req, res, next){
+		let token = req.query["t"];
+		console.log(token);
+		let decoded = jwt.verify(token, config.SECRET);
+		if(decoded._id){
+			req.decoded = decoded;
+			req.decoded.verified = true;
+			next();
+		}
+		else res.status(401).json(decoded);
+	},
+
 	// associating the creator with the quiz created
 	associateQuiz: function(quizID, creatorID, next){
 		User.findByIdAndUpdate(creatorID, {$push: {quizzesCreated: quizID}}, {new: true}, (err, creator) => {
@@ -52,5 +65,24 @@ module.exports = {
 			.catch(e => {
 				return res.status(400).json(e);
 			});
+	},
+
+	// displaying user profile
+	userProfile: function(req, res, next){
+		if(req.decoded._id === req.params.id){
+			User.findById(req.params.id).populate("participations").populate("quizzesCreated").exec((err, user) => {
+				if(err) return next(err);
+				// rendering the user profile file and passing the user object
+				console.log(user);
+				res.status(200).render("userProfile", {
+					links: {
+						home: "/",
+						about: "/about",
+					},
+					user: user,
+				});
+			});
+		}
+		else res.status(401).redirect("/?message=Unauthorised%20profile%20access!");
 	},
 };

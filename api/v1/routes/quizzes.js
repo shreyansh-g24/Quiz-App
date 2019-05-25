@@ -6,7 +6,7 @@ let router = express.Router();
 
 // requiring controller functions
 let quizController = require("./../controllers/quizController");
-let {authenticateJWT} = require("./../../../controllers/userController");
+let {authenticateJWT, extractJWT} = require("./../../../controllers/userController");
 
 /* 
   Handled Routes:
@@ -17,7 +17,7 @@ let {authenticateJWT} = require("./../../../controllers/userController");
 
 router.get("/", quizController.returnAll);
 router.post("/search", authenticateJWT, quizController.searchQuizzes);
-router.get("/search/:id", authenticateJWT, quizController.returnQuiz);
+router.get("/search/:id", extractJWT, quizController.returnQuiz);
 
 // exporting router
 module.exports = router;

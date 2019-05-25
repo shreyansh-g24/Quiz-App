@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quiz-App/Login</title>
+  <title>Hello <%= user.username %></title>
   <!-- Stylesheets -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
   <link rel="stylesheet" href="/stylesheets/style.css">
@@ -12,6 +12,7 @@
 </head>
 
 <body>
+
   <!-- HEADER -->
   <header>
     <nav class="navbar is-bold" role="navigation" aria-label="main navigation">
@@ -40,16 +41,6 @@
             About
           </a>
         </div>
-
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <a href="<%= links.signup %>" class="button is-primary">
-                <strong>Sign up</strong>
-              </a>
-            </div>
-          </div>
-        </div>
       </div>
     </nav>
 
@@ -60,46 +51,49 @@
           <h1 class="title is-1">
             Quiz-App
           </h1>
+          <h2 id="messageContainer" class="subtitle"></h2>
         </div>
       </div>
-
+    </section>
   </header>
 
-  <main>
+  <main class="container-center">
     <section class="section">
-      <h1 class="subtitle container-center">Login Form</h1>
-      <form class="container box container-center" method="POST" action="<%= links.loginURL %>">
-        <div class="field">
-          <p class="control has-icons-left has-icons-right">
-            <input class="input is-focused" name="identity" type="text" placeholder="Username or Email">
-            <span class="icon is-small is-left">
-              <i class="fas fa-envelope"></i>
-            </span>
-            <span class="icon is-small is-right">
-              <i class="fas fa-check"></i>
-            </span>
-          </p>
-        </div>
-        <div class="field">
-          <p class="control has-icons-left">
-            <input class="input is-focused" name="password" type="password" placeholder="Password">
-            <span class="icon is-small is-left">
-              <i class="fas fa-lock"></i>
-            </span>
-          </p>
-        </div>
-        <div class="field">
-          <p class="control">
-            <button class="button is-success">
-              Login
-            </button>
-          </p>
-        </div>
-      </form>
+      <div class="container">
+        <h1 class="title">
+          Profile Page:
+        </h1>
+        <p class="subtitle">
+          username: <%= user.username %>
+        </p>
+        <p class="subtitle">
+          email: <%= user.email %>
+        </p>
+        <p class="subtitle">
+          Average Score: <%= user.avgScore %>
+        </p>
+        <h2 class="title">Participations:</h2>
+        <p class="subtitle">
+          <% user.participations.forEach((quiz, index) => { %>
+          <%= index: %>
+          <%= quiz.quizAttempt %>
+          <%= quiz.score %>
+          <%= quiz.date %>
+          <% }) %>
+        </p>
+        <h2 class="title">Creations:</h2>
+        <p class="subtitle">
+          <% user.quizzesCreated.forEach((quiz) => { %>
+          <%= quiz.title %>
+          <% }) %>
+        </p>
+      </div>
     </section>
   </main>
   <% include partials/footer %>
 </body>
-<script type="text/javascript" src="/javascripts/login.js"></script>
+<script type="text/javascript">
+  window.location = window.location.origin + "/users/me";
+</script>
 
 </html>

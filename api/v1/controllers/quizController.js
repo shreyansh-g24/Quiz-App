@@ -43,9 +43,17 @@ module.exports = {
 
   // returning the requested quiz
   returnQuiz: function(req, res, next){
-    Quiz.findById(req.params.id, (err, quiz) => {
+    Quiz.findById(req.params.id).populate("creator_id").exec((err, quiz) => {
       if(err) return next(err);
-      res.status(200).json(quiz);
+      res.status(200).render("quizPreview", {
+        links: {
+          home: "/",
+          about: "/about",
+          login: "/login",
+          signup: "/signup",
+        },
+        quiz: quiz,
+      });
     });
   },
 };
