@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz-App/SignUp</title>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header>
+    <nav class="navbar is-bold" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="<%= links.home %>">
+          <span class="icon is-medium">
+            <i class="fab fa-2x fa-github"></i>
+          </span>
+        </a>
+
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+          data-target="navbarBasicExample">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a href="<%= links.home %>" class="navbar-item">
+            Home
+          </a>
+
+          <a href="<%= links.about %>" class="navbar-item">
+            About
+          </a>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <a id="heroLogIn" href="<%= links.login %>" class="button is-light">
+                Log in
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <section class="hero is-primary is-medium is-bold">
+
+
+      <!-- Hero content: will be in the middle -->
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <h1 class="title is-1">
+            Quiz-App
+          </h1>
+        </div>
+      </div>
+
+    </section>
+  </header>
+
+  <main class="container-center">
+    <h1 class="subtitle">Sign Up</h1>
+
+    <form method="POST" action="<%= links.signUpURL %>">
+      <div class="field">
+        <label class="label">Username</label>
+        <div class="control has-icons-left has-icons-right">
+          <input id="usernameInput" class="input" name="username" type="text" required placeholder="Username(Only alphabets and numbers)">
+          <span class="icon is-small is-left">
+            <i class="fas fa-user"></i>
+          </span>
+          <span class="icon is-small is-right">
+            <i class="fas fa-check"></i>
+          </span>
+        </div>
+        <p id="usernameSuccess" class="help is-success formHelpText">This username is valid. Submit to check availability.</p>
+        <p id="usernameWarning" class="help is-danger formHelpText">This username is invalid</p>
+      </div>
+
+      <div class="field">
+        <label class="label">Email</label>
+        <div class="control has-icons-left has-icons-right">
+          <input id="emailInput" class="input" name="email" required type="email" placeholder="Email input">
+          <span class="icon is-small is-left">
+            <i class="fas fa-envelope"></i>
+          </span>
+          <span class="icon is-small is-right">
+            <i class="fas fa-exclamation-triangle"></i>
+          </span>
+        </div>
+        <p id="emailSuccess" class="help is-success formHelpText">This email is valid. Submit to check availability.</p>
+        <p id="emailWarning" class="help is-danger formHelpText">This email is invalid</p>
+      </div>
+
+      <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+          <input id="passwordInput" class="input" name="password" required type="text" placeholder="Password(min 8 characters)">
+        </div>
+        <p id="passwordSuccess" class="help is-success formHelpText">This password is good</p>
+        <p id="passwordWarning" class="help is-danger formHelpText">This password is invalid</p>
+      </div>
+
+      <div class="field is-grouped">
+        <div class="control">
+          <button type="submit" class="button is-link">Submit</button>
+        </div>
+        <div class="control">
+          <input type="reset" class="button is-text" value="Cancel">
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <% include partials/footer %>
+</body>
+<script type="text/javascript" src="/javascripts/signup.js"></script>
+
+</html>

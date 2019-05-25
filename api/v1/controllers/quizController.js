@@ -11,7 +11,7 @@ let Quiz = mongoose.model("Quiz");
 module.exports = {
   // returning all quizzes
   returnAll: function(req, res, next){
-    Quiz.find({}, (err, quizArr) => {
+    Quiz.find({}).populate("creator_id").exec((err, quizArr) => {
       if(err) return next(err);
       res.status(200).json(quizArr);
     });

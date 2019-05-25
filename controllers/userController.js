@@ -37,7 +37,7 @@ module.exports = {
 	createUser: function (req, res, next) {
 		User.create(req.body, (err, newUser) => {
 			if (err) return next(err);
-			res.status(201).json(newUser);
+			res.status(201).redirect("/?message=Account%20Made!%20Login%20to%20get%20started!&status=success");
 		});
 	},
 
@@ -47,7 +47,7 @@ module.exports = {
 			.then(user => {
 				let token = user.generateWebToken();
 				res.header("x-auth", token);
-				return res.status(200).json(user);
+				return res.status(200).redirect(`/?t=${token}&u=${user.username}&id=${user._id}`);
 			})
 			.catch(e => {
 				return res.status(400).json(e);

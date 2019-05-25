@@ -1,8 +1,23 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+/* Custom Styles */
+
+.extend-height{
+  height: 100vh;
 }
 
-a {
-  color: #00B7FF;
+.container-center {
+  width: 500px;
+  margin: 15px auto;
+}
+
+.margin-basic {
+  margin: 20px auto;
+}
+
+.shadow-basic {
+  box-shadow: 10px 10px 10px 0 rgba(0, 0, 0, 0.7)
+}
+
+/* SignUp Form */
+.formHelpText{
+  display: none;
 }

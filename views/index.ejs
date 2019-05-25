@@ -1,11 +1,40 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz-App</title>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   </head>
+
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <% include partials/header %>
+    <main>
+      <section class="section">
+        <div id="homeQuizDisplayContainer" class="container">
+
+          <!-- <div class="card margin-basic shadow-basic">
+            <div class="card-content">
+              <p class="title">${info._doc.title}</p>
+              <p class="subtitle">by ${info._doc.creator_id}</p>
+            </div>
+            <footer class="card-footer">
+              <p class="card-footer-item"><span><a href="http://localhost:3000/api/v1/quiz/search/${info._doc._id}">Read
+                    More</a></span></p>
+              <p class="card-footer-item"><span><a href="00_SHARE_00">Copy Sharable Link</a></span></p>
+            </footer>
+          </div> -->
+
+        </div>
+      </section>
+    </main>
+    <% include partials/footer %>
   </body>
+  <!-- JS -->
+  <script type="text/javascript" src="/javascripts/main.js"></script>
+  <script type="text/javascript" src="/javascripts/header.js"></script>
 </html>
