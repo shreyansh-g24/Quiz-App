@@ -12,6 +12,11 @@ let {associateQuiz} = require("./userController");
 
 // exporting quiz controller functions
 module.exports = {
+  // rendering form for a new quiz
+  renderNewQuizForm: function(req, res, next){
+    res.render("/newQuizForm");
+  },
+
   // creating a new quiz
   createNew: function(req, res, next){
 
@@ -39,8 +44,8 @@ module.exports = {
       // if authorisation passed, updating the quiz to be marked as deleted
       Quiz.findByIdAndUpdate(req.params.id, {isDeleted: true}, {new: true}, (err, updatedQuiz) => {
         if(err) return next(err);
-        res.status(200).json(updatedQuiz)
-      });
+        res.status(200).redirect(`/users/${updatedQuiz.creator_id}`);
+      }); 
     });
   },
 
@@ -55,7 +60,7 @@ module.exports = {
       // if authorisation passed, updating the quiz to be marked as not deleted
       Quiz.findByIdAndUpdate(req.params.id, {isDeleted: false}, {new: true}, (err, updatedQuiz) => {
         if(err) return next(err);
-        res.status(200).json(updatedQuiz);
+        res.status(200).redirect(`/users/${updatedQuiz.creator_id}`);
       });
     });
   },

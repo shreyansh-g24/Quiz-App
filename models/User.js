@@ -51,22 +51,6 @@ let userSchema = mongoose.Schema({
 			message: "{VALUE} is not a valid email!",
 		},
 	},
-	avgScore: {
-		type: Number,
-		default: 0,
-	},
-	participations: [{
-		quizAttempt: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Quiz",
-		},
-		score: {
-			type: Number,
-		},
-		date: {
-			type: Date,
-		},
-	}],
 	quizzesCreated: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Quiz",
@@ -79,8 +63,8 @@ let userSchema = mongoose.Schema({
 userSchema.methods.toJSON = function(){
 	let user = this;
 	// extracting fields to be returned
-	let {email, username, avgScore, quizzesCreated, participations} = user;
-	let userObject = {email, username, avgScore, quizzesCreated, participations};
+	let {email, username, quizzesCreated} = user;
+	let userObject = {email, username, quizzesCreated};
 	return userObject;
 }
 

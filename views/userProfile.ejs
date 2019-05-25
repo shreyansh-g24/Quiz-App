@@ -4,15 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hello <%= user.username %></title>
-  <!-- Stylesheets -->
+  <title>Profile</title>
+  <!-- StyleSheets -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
   <link rel="stylesheet" href="/stylesheets/style.css">
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
 
 <body>
-
   <!-- HEADER -->
   <header>
     <nav class="navbar is-bold" role="navigation" aria-label="main navigation">
@@ -40,11 +39,25 @@
           <a href="<%= links.about %>" class="navbar-item">
             About
           </a>
+
+
+
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <button id="heroCreateQuiz" class="button is-light">
+                Create A Quiz
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
 
     <section class="hero is-primary is-medium is-bold">
+
       <!-- Hero content: will be in the middle -->
       <div class="hero-body">
         <div class="container has-text-centered">
@@ -57,43 +70,39 @@
     </section>
   </header>
 
-  <main class="container-center">
-    <section class="section">
+  <main>
+    <section class="section box container-center">
       <div class="container">
-        <h1 class="title">
+        <h1 class="title padding-bottom">
           Profile Page:
         </h1>
         <p class="subtitle">
-          username: <%= user.username %>
+          <%= user.username %>
         </p>
-        <p class="subtitle">
-          email: <%= user.email %>
+        <p class="subtitle padding-bottom">
+          <%= user.email %>
         </p>
-        <p class="subtitle">
-          Average Score: <%= user.avgScore %>
-        </p>
-        <h2 class="title">Participations:</h2>
-        <p class="subtitle">
-          <% user.participations.forEach((quiz, index) => { %>
-          <%= index: %>
-          <%= quiz.quizAttempt %>
-          <%= quiz.score %>
-          <%= quiz.date %>
-          <% }) %>
-        </p>
-        <h2 class="title">Creations:</h2>
-        <p class="subtitle">
-          <% user.quizzesCreated.forEach((quiz) => { %>
-          <%= quiz.title %>
-          <% }) %>
-        </p>
+        <p class="title is-6">Your Quizzes: </p>
+        <% user.quizzesCreated.forEach((quiz) => { %>
+          <div class="container padding-bottom">
+            <p class="title is-5 bold">
+              
+              <!-- <% if(quiz.isDeleted){ %>
+                <a id="restoreQuiz" href="/quiz/restore/<%= quiz._id %>"><i class="fas icon-restore fa-redo-alt"></i></a>
+              <% } else if(!quiz.isDeleted){ %>
+                <a id="deleteQuiz" href="/quiz/delete/<%= quiz._id %>"></a><i class="fas icon-delete fa-trash-alt"></i></a>
+              <% } %> -->
+              
+              <%= quiz.title %>
+            </p>
+            <p class="subtitle italics"><%= quiz.description %></p>
+          </div>
+        <% }) %>
       </div>
     </section>
   </main>
-  <% include partials/footer %>
 </body>
-<script type="text/javascript">
-  window.location = window.location.origin + "/users/me";
-</script>
+<!-- JS -->
+<script type="text/javascript" src="/javascripts/userProfile.js"></script>
 
 </html>

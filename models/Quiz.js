@@ -44,10 +44,6 @@ let quizSchema = mongoose.Schema({
     ref: "User",
     required: true,
   },
-  participants: [{
-    type: String,
-    ref: "User",
-  }],
   isDeleted: {
     type: Boolean,
     default: false,
@@ -79,7 +75,6 @@ quizSchema.methods.toJSON = function(){
       title: quiz.title,
       description: "This quiz was deleted by the creator",
       creator_id: quiz.creator_id,
-      participants: quiz.participants,
       isDeleted: quiz.isDeleted
     };
   }

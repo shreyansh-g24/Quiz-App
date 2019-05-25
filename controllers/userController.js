@@ -14,7 +14,6 @@ module.exports = {
 	// extract token value and set it in headers for authenticateJWT middleware
 	extractJWT: function(req, res, next){
 		let token = req.query["t"];
-		console.log(token);
 		let decoded = jwt.verify(token, config.SECRET);
 		if(decoded._id){
 			req.decoded = decoded;
@@ -60,6 +59,7 @@ module.exports = {
 			.then(user => {
 				let token = user.generateWebToken();
 				res.header("x-auth", token);
+
 				return res.status(200).redirect(`/?t=${token}&u=${user.username}&id=${user._id}`);
 			})
 			.catch(e => {
@@ -70,7 +70,7 @@ module.exports = {
 	// displaying user profile
 	userProfile: function(req, res, next){
 		if(req.decoded._id === req.params.id){
-			User.findById(req.params.id).populate("participations").populate("quizzesCreated").exec((err, user) => {
+			User.findById(req.params.id).populate("quizzesCreated").exec((err, user) => {
 				if(err) return next(err);
 				// rendering the user profile file and passing the user object
 				console.log(user);
