@@ -2,8 +2,35 @@
 
 // Declaring global variables and constants
 let Global_User = JSON.parse(localStorage.getItem("quizAppUser")) ? JSON.parse(localStorage.getItem("quizAppUser")) : "";
+let Global_OrderedQuiz = null;
 
 // Declaring functions //
+
+// looking up quizzes using query strings
+function searchQuizHandler(){
+  // selecting the input field
+  let searchQuizInput = document.querySelector("#heroSearchbar");
+  searchQuizInput.addEventListener("keyup", (event) => {
+    if(event.keyCode === 13){
+      fetch("http://localhost:3000/api/v1/quiz/search", {
+        method: "POST",
+        body: JSON.stringify({query: searchQuizInput.value}),
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth": Global_User.token,
+        },
+      }).then(response => response.json())
+        .then(data => {
+          Global_OrderedQuiz = data;
+          displayQuizList(Global_OrderedQuiz);
+        })
+        .catch(e => console.log(e));
+
+        searchQuizInput.value = "";
+    }
+  });
+}
+
 // extracting and saving token from url
 function queryHandler(){
   if(window.location.search){ 
@@ -90,5 +117,6 @@ function init(){
 }
 
 // Execution //
+searchQuizHandler();
 queryHandler();
 init();

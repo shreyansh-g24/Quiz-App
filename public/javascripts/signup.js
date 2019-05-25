@@ -87,3 +87,19 @@
       emailInput.classList.add("is-success");
     }
   });
+
+  // adding event listener on cancel btn
+  let resetBtn = document.querySelector("#resetBtn");
+
+  resetBtn.addEventListener("click", () => {
+    // resetting classes on help text and input fields
+    passwordSuccess.style.display = "none";
+    passwordWarning.style.display = "none";
+    usernameSuccess.style.display = "none";
+    usernameWarning.style.display = "none";
+    emailSuccess.style.display = "none";
+    emailWarning.style.display = "none";
+    emailInput.classList.remove("is-danger", "is-success");
+    usernameInput.classList.remove("is-danger", "is-success");
+    passwordInput.classList.remove("is-danger", "is-success");
+  });

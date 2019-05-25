@@ -2,7 +2,7 @@
 
 // importing modules
 let mongoose = require("mongoose");
-let stringSimilarity = require("string-similarity");
+let Fuse = require("fuse.js");
 
 // getting quiz model
 let Quiz = mongoose.model("Quiz");
@@ -21,26 +21,23 @@ module.exports = {
   searchQuizzes: function(req, res, next){
     // extracting the query string
     let queryString = req.body.query;
-    Quiz.find({}, function(err, quizArr){
+
+    // defining fuse options
+    let fuseOptions = {
+      shouldSort: true,
+      maxPatternLength: 32,
+      minMatchCharLength: 1,
+      keys: [
+        "title",
+        "description",
+        "tags"
+      ],
+    };
+    Quiz.find({}).populate("creator_id").exec(function(err, quizArr){
       if(err) return next(err);
-      
-      // extracting quiz titles into an array
-      let titles = [];
-      
-      // TEMP: Add support for searching via description and tags and return the _id of the matches as well ////////////////////////////
-
-      quizArr.forEach((quiz) => titles.push(quiz.title));
-
-      // matching the titles array with the query string and arranging in descending order of similarity
-      let match = stringSimilarity.findBestMatch(queryString, titles);
-      let matchRatings = match.ratings;
-      let matches = matchRatings.sort(function(a, b){return b.rating - a.rating});
-
-      let order = [];
-      matches.forEach((match) => order.push(match.target));
-
-      // returning the matches
-      res.status(200).json(order);
+      let fuse = new Fuse(quizArr, fuseOptions);
+      let result = fuse.search(queryString);
+      res.status(200).json(result);
     });
   },
 
