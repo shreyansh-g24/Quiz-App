@@ -1,2 +1,2 @@
 # Quiz-App
-Create quiz or participate.
+Create your own quiz or participate in quizzes created by other users.
